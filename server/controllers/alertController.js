@@ -1,6 +1,37 @@
 const { Alert } = require("../models");
 const { Op } = require("sequelize");
 
+// POST /alerts
+// Generate random alert
+const severities = ["Low", "Medium", "High", "Critical"];
+const tactics = [
+  "Initial Access",
+  "Persistence",
+  "Privilege Escalation",
+  "Exfiltration",
+];
+
+function getRandomElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const generateRandomAlert = async (req, res) => {
+  try {
+    const alertData = {
+      type: "Simulated",
+      message: `Auto-generated at ${new Date().toISOString()}`,
+      severity: getRandomElement(severities),
+      tactic: getRandomElement(tactics),
+      userId: req.user.userId,
+    };
+
+    const newAlert = await Alert.create(alertData);
+    res.status(201).json(newAlert);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // GET /alerts
 const getAlerts = async (req, res) => {
   const { severity, tactic, page = 1, limit = 10, q } = req.query;
@@ -67,4 +98,6 @@ const deleteAlert = async (req, res) => {
   }
 };
 
-module.exports = { getAlerts, createAlert, deleteAlert };
+// GENERATE /generate
+
+module.exports = { getAlerts, createAlert, deleteAlert, generateRandomAlert };

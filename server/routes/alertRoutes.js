@@ -5,6 +5,7 @@ const {
   getAlerts,
   createAlert,
   deleteAlert,
+  generateRandomAlert,
 } = require("../controllers/alertController");
 
 router.use(verifyToken); // protect all routes below
@@ -12,5 +13,6 @@ router.use(verifyToken); // protect all routes below
 router.get("/", getAlerts);
 router.post("/", createAlert);
 router.delete("/:id", deleteAlert);
+router.post("/generate", generateRandomAlert);
 
 module.exports = router;
