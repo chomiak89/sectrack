@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut, AlertCircle, LayoutDashboard } from "lucide-react";
+import { LogOut, AlertCircle, LayoutDashboard, BarChart } from "lucide-react";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -19,6 +19,9 @@ const Layout = ({ children }) => {
           </Link>
           <Link to="/alerts" className="flex items-center gap-2 hover:text-green-400">
             <AlertCircle size={18} /> Alerts
+          </Link>
+          <Link to="/metrics" className="flex items-center gap-2 hover:text-green-400">
+            <BarChart size={18} /> Metrics
           </Link>
         </nav>
         <button

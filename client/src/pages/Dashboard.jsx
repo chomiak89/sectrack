@@ -3,6 +3,7 @@ import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 const Dashboard = () => {
   const [alerts, setAlerts] = useState([]);
@@ -12,6 +13,11 @@ const Dashboard = () => {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+
+  //   get role from token
+  const token = localStorage.getItem("token");
+  const decoded = token ? jwtDecode(token) : {};
+  const isAdmin = decoded.role === "admin";
 
   const fetchAlerts = async () => {
     try {
@@ -210,12 +216,14 @@ const Dashboard = () => {
                         <span className="px-2 py-1 bg-gray-700 rounded text-sm">{alert.tactic}</span>
                         ) : "-"}</td>
                 <td className="p-2">
-                  <button
-                    onClick={() => handleDelete(alert.id)}
-                    className="bg-red-600 px-2 py-1 rounded hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
+                {isAdmin && (
+                    <button
+                        onClick={() => handleDelete(alert.id)}
+                        className="bg-red-600 px-2 py-1 rounded hover:bg-red-700"
+                    >
+                        Delete
+                    </button>
+                )}
                 </td>
               </tr>
             ))}

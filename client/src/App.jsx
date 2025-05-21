@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import Metrics from "./pages/Metrics";
 import './App.css'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +19,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/metrics" element={<ProtectedRoute><Metrics /></ProtectedRoute>}/>
           
           {/* Add others later */}
           <Route path="*" element={<h1 className="text-white text-center mt-10">404 - Page Not Found</h1>} />

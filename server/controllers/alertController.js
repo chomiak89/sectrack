@@ -1,4 +1,4 @@
-const { Alert } = require("../models");
+const { Alert, Sequelize } = require("../models");
 const { Op } = require("sequelize");
 
 // POST /alerts
@@ -91,6 +91,10 @@ const deleteAlert = async (req, res) => {
       return res.status(404).json({ message: "Alert not found" });
     }
 
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Only admins can delete alerts" });
+    }
+
     await alert.destroy();
     res.json({ message: "Alert deleted" });
   } catch (err) {
@@ -98,6 +102,43 @@ const deleteAlert = async (req, res) => {
   }
 };
 
-// GENERATE /generate
+//GET /alerts
+//get metrics
+const getMetrics = async (req, res) => {
+  try {
+    const userId = req.user.userId;
 
-module.exports = { getAlerts, createAlert, deleteAlert, generateRandomAlert };
+    const bySeverity = await Alert.findAll({
+      where: { userId },
+      attributes: [
+        "severity",
+        [Sequelize.fn("COUNT", Sequelize.col("severity")), "count"],
+      ],
+      group: ["severity"],
+    });
+
+    const byTactic = await Alert.findAll({
+      where: { userId },
+      attributes: [
+        "tactic",
+        [Sequelize.fn("COUNT", Sequelize.col("tactic")), "count"],
+      ],
+      group: ["tactic"],
+    });
+
+    res.json({
+      bySeverity,
+      byTactic,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = {
+  getAlerts,
+  createAlert,
+  deleteAlert,
+  generateRandomAlert,
+  getMetrics,
+};
